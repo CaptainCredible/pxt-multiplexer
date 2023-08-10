@@ -3,6 +3,7 @@
  */
 
 //% weight=500 color=#89d604 icon=""
+//% groups="['Setup', 'Use']"
 namespace multiplexer {
     let pinA = DigitalPin.P13
     let pinB = DigitalPin.P14
@@ -16,7 +17,8 @@ namespace multiplexer {
      */
     //% block="setup multiplexer pins | pin A $A pin B $B pin C $C input $inOut"
     //% A.defl=DigitalPin.P13 B.defl=DigitalPin.P14 C.defl=DigitalPin.P15 inOut.defl=DigitalPin.P1
-    //% weight=200
+    //% weight=900
+    //% group="Setup"
     export function setAddressPins(inOut: DigitalPin, A: DigitalPin, B: DigitalPin, C: DigitalPin) {
         pinA = DigitalPin.P13
         pinB = DigitalPin.P14
@@ -24,11 +26,12 @@ namespace multiplexer {
     }
 
     /**
-     * set analog read pins
+     * set analog read pin
      */
     //% block="set multiplexer analog read pin to $inOut"
     //% inOut.defl=AnalogPin.P1
-    //% weight=200
+    //% weight=800
+    //% group="Setup"
     export function setAnalogPin(inOut: AnalogPin) {
         anaPinIn = inOut
     }
@@ -38,7 +41,8 @@ namespace multiplexer {
          */
     //% block="set multiplexer digital read pin to $inOut"
     //% inOut.defl=DigitalPin.P1
-    //% weight=200
+    //% weight=850
+    //% group="Setup"
     export function setDigitalPin(inOut: DigitalPin) {
         digiPinIn = inOut
     }
@@ -48,7 +52,8 @@ namespace multiplexer {
      * analog read from multiplexer pin
      */
     //% block="read analog from multiplexer pin $inputToRead"
-    //% weight=200
+    //% weight=600
+    //% group="Use"
     export function analogReadPlexer(inputToRead: number) {
         pins.digitalWritePin(pinA, inputToRead & 0b100);
         pins.digitalWritePin(pinB, inputToRead & 0b010);
@@ -60,7 +65,8 @@ namespace multiplexer {
      * digital read from multiplexer pin
      */
     //% block="read digital from multiplexer pin $inputToRead"
-    //% weight=200
+    //% weight=700
+    //% group="Use"
     export function digitalReadPlexer(inputToRead: number) {
         pins.digitalWritePin(pinA, inputToRead & 0b100);
         pins.digitalWritePin(pinB, inputToRead & 0b010);
@@ -72,7 +78,8 @@ namespace multiplexer {
      * send 3V to multiplexer pin
      */
     //% block="set multiplexer to $inputToRead"
-    //% weight=200
+    //% weight=200 advanced=true
+    //% group="Use"
     export function setPlexer(pinSelect: number) {
         pins.digitalWritePin(pinA, pinSelect & 0b100);
         pins.digitalWritePin(pinB, pinSelect & 0b010);
