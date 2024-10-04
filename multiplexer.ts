@@ -108,8 +108,9 @@ namespace multiplexer {
     //% weight=200 advanced=false
     //% group="Use"
     export function setPlexer(pinSelect: number) {
-        pins.digitalWritePin(pinA, pinSelect & 0b100);
-        pins.digitalWritePin(pinB, pinSelect & 0b010);
-        pins.digitalWritePin(pinC, pinSelect & 0b001);
+        let remappedPinSelect = remapNum[pinSelect]
+        pins.digitalWritePin(pinA, remappedPinSelect & 0b100);
+        pins.digitalWritePin(pinB, remappedPinSelect & 0b010);
+        pins.digitalWritePin(pinC, remappedPinSelect & 0b001);
     }
 }
