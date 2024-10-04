@@ -10,19 +10,35 @@ namespace multiplexer {
     let pinC = DigitalPin.P15
     let anaPinIn = AnalogPin.P1
     let digiPinIn = DigitalPin.P1
-    
+    let badHardware = false
+    let remapNum: number[] = [0, 4, 2, 6, 1, 5, 3, 7];
     
     /**
      * set multiplexer pins
      */
-    //% block="setup multiplexer pins | pin A $A pin B $B pin C $C input $inOut"
+    //% block="setup multiplexer for DIGITAL read | pin A $A pin B $B pin C $C input $inOut"
     //% A.defl=DigitalPin.P13 B.defl=DigitalPin.P14 C.defl=DigitalPin.P15 inOut.defl=DigitalPin.P1
     //% weight=900
     //% group="Setup"
-    export function setAddressPins(inOut: DigitalPin, A: DigitalPin, B: DigitalPin, C: DigitalPin) {
+    export function setUpForDigitalRead(inOut: DigitalPin, A: DigitalPin, B: DigitalPin, C: DigitalPin) {
         pinA = DigitalPin.P13
         pinB = DigitalPin.P14
         pinC = DigitalPin.P15
+        let digiPinIn = inOut
+    }
+
+    /**
+     * set multiplexer pins
+     */
+    //% block="setup multiplexer for ANALOG read | pin A $A pin B $B pin C $C input $inOut"
+    //% A.defl=DigitalPin.P13 B.defl=DigitalPin.P14 C.defl=DigitalPin.P15 inOut.defl=DigitalPin.P1
+    //% weight=900
+    //% group="Setup"
+    export function setUpForAnalogRead(inOut: AnalogPin, A: DigitalPin, B: DigitalPin, C: DigitalPin) {
+        pinA = DigitalPin.P13
+        pinB = DigitalPin.P14
+        pinC = DigitalPin.P15
+        let anaPinIn = inOut
     }
 
     /**
@@ -54,12 +70,20 @@ namespace multiplexer {
     //% block="read analog from multiplexer pin $inputToRead"
     //% weight=600
     //% group="Use"
-    export function analogReadPlexer(inputToRead: number) {
-        pins.digitalWritePin(pinA, inputToRead & 0b100);
-        pins.digitalWritePin(pinB, inputToRead & 0b010);
-        pins.digitalWritePin(pinC, inputToRead & 0b001);
+    export function analogReadPlexer(inputToRead: number) {  
+        let remappedInputToRead = remapNum[inputToRead]
+        pins.digitalWritePin(pinA, remappedInputToRead & 0b100);
+        pins.digitalWritePin(pinB, remappedInputToRead & 0b010);
+        pins.digitalWritePin(pinC, remappedInputToRead & 0b001);
+        //basic.pause(1);
+        control.waitMicros(100)
         return pins.analogReadPin(anaPinIn);
+        //basic.pause(1);
+        control.waitMicros(100)
+        led.toggleAll();
     }
+
+    
 
     /**
      * digital read from multiplexer pin
@@ -68,9 +92,10 @@ namespace multiplexer {
     //% weight=700
     //% group="Use"
     export function digitalReadPlexer(inputToRead: number) {
-        pins.digitalWritePin(pinA, inputToRead & 0b100);
-        pins.digitalWritePin(pinB, inputToRead & 0b010);
-        pins.digitalWritePin(pinC, inputToRead & 0b001);
+        let remappedInputToRead = remapNum[inputToRead]
+        pins.digitalWritePin(pinA, remappedInputToRead & 0b100);
+        pins.digitalWritePin(pinB, remappedInputToRead & 0b010);
+        pins.digitalWritePin(pinC, remappedInputToRead & 0b001);
         return pins.digitalReadPin(digiPinIn);
     }
 
