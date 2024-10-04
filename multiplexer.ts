@@ -12,6 +12,7 @@ namespace multiplexer {
     let digiPinIn = DigitalPin.P1
     let badHardware = false
     let remapNum: number[] = [0, 4, 2, 6, 1, 5, 3, 7];
+    let preWait = 50
     
     /**
      * set multiplexer pins
@@ -75,12 +76,12 @@ namespace multiplexer {
         pins.digitalWritePin(pinA, remappedInputToRead & 0b100);
         pins.digitalWritePin(pinB, remappedInputToRead & 0b010);
         pins.digitalWritePin(pinC, remappedInputToRead & 0b001);
-        //basic.pause(1);
-        control.waitMicros(100)
+        
+        control.waitMicros(preWait)
         return pins.analogReadPin(anaPinIn);
-        //basic.pause(1);
-        control.waitMicros(100)
-        led.toggleAll();
+        
+        //control.waitMicros(postWait)
+        
     }
 
     
@@ -102,15 +103,13 @@ namespace multiplexer {
     /**
      * send 3V to multiplexer pin
      */
-    //% block="set multiplexer to $inputToRead"
-    //% weight=200 advanced=true
+    //% block="set multiplexer to $pinSelect"
+    //% pinSelect.defl = 0
+    //% weight=200 advanced=false
     //% group="Use"
     export function setPlexer(pinSelect: number) {
         pins.digitalWritePin(pinA, pinSelect & 0b100);
         pins.digitalWritePin(pinB, pinSelect & 0b010);
         pins.digitalWritePin(pinC, pinSelect & 0b001);
     }
-
-
-
 }
